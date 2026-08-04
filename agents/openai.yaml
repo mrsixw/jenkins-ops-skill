@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jenkins Ops"
+  short_description: "Operate Jenkins with safe tiered fallbacks"
+  default_prompt: "Use $jenkins-ops to inspect or operate Jenkins, preferring a configured Jenkins MCP server, then Jeeves, then the HTTP API."
