@@ -25,7 +25,7 @@ If no dedicated probe exists, call the smallest read-only tool relevant to the r
 | Tool succeeds | MCP is usable for capabilities exposed by that server |
 | Tool is absent | MCP lacks that capability; evaluate Tier 2 |
 | Connection/authentication fails | MCP is unavailable until its configuration changes |
-| An error names `anonymous`, such as `anonymous is missing the Overall/Read permission` | The server sent no credentials. Treat it as an authentication failure for every operation, not as a permission gap on one tool |
+| An error names `anonymous`, such as `anonymous is missing the Overall/Read permission` | The request reached Jenkins unauthenticated. Treat it as an authentication failure for every operation, not as a permission gap on one tool |
 | Identity succeeds as `anonymous` | Reads the controller allows publicly may work. Treat it as an authentication failure when the request needs an authenticated user or another tier has credentials |
 | Permission is denied | MCP is unavailable for that protected operation, not necessarily for all reads |
 | Job or build is not found | Recheck the controller and path; do not classify the MCP transport as down |

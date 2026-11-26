@@ -182,7 +182,8 @@ fallback chain to it:
 3. Otherwise read older builds one at a time with `build show JOB NUMBER`,
    working down from the oldest number returned, in parallel batches. Skip
    numbers that return not found, because discarded builds leave gaps. Stop at
-   build 1 or once a whole batch of found builds started before the period.
+   build 1 or once a whole batch of found builds started before the period,
+   and report the oldest build number checked.
 
 ## Handle Triggers Carefully
 
