@@ -43,7 +43,7 @@ State the reason before falling back. Do not repeatedly probe a known outage. Tr
 Inspect the tools surfaced by the current runtime for Jenkins MCP servers. MCP namespaces and tool names vary, so match by server and tool descriptions rather than assuming a prefix, fixed tool count, or exact names.
 
 1. Select the MCP server associated with the resolved controller. Ask if multiple servers remain ambiguous.
-2. Prefer a read-only identity or status tool as the health/auth probe. If neither exists, use the smallest read-only tool needed for the request.
+2. Prefer a read-only identity or status tool as the health/auth probe. If neither exists, use the smallest read-only tool needed for the request. An error that names `anonymous` as the principal means the server sent no credentials: treat it as an authentication failure for the whole server, not a permission gap on one tool. Treat a successful `anonymous` identity the same way when the request needs an authenticated user, such as attributing builds to them, or another tier has credentials for the controller.
 3. Match the operation to the MCP capability before declaring a gap:
 
 | Intent | Required MCP capability |

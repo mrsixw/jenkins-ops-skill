@@ -47,6 +47,14 @@ curl -fsS --globoff --user "$JENKINS_USER:$JENKINS_TOKEN" \
   | jq '{number, result, building, url, queueId}'
 ```
 
+Build history past the newest 100 (`builds` stops there; see the MCP capability guide for paging rules):
+
+```bash
+curl -fsS --globoff --user "$JENKINS_USER:$JENKINS_TOKEN" \
+  "$JOB_URL/api/json?tree=allBuilds[number,timestamp,result,url]{100,125}" \
+  | jq '.allBuilds'
+```
+
 Console snapshot:
 
 ```bash
