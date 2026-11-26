@@ -25,6 +25,8 @@ If no dedicated probe exists, call the smallest read-only tool relevant to the r
 | Tool succeeds | MCP is usable for capabilities exposed by that server |
 | Tool is absent | MCP lacks that capability; evaluate Tier 2 |
 | Connection/authentication fails | MCP is unavailable until its configuration changes |
+| An error names `anonymous`, such as `anonymous is missing the Overall/Read permission` | The request reached Jenkins unauthenticated. Treat it as an authentication failure for every operation, not as a permission gap on one tool |
+| Identity succeeds as `anonymous` | Reads the controller allows publicly may work. Treat it as an authentication failure when the request needs an authenticated user or another tier has credentials |
 | Permission is denied | MCP is unavailable for that protected operation, not necessarily for all reads |
 | Job or build is not found | Recheck the controller and path; do not classify the MCP transport as down |
 
@@ -60,6 +62,20 @@ Before declaring a capability gap:
 2. Compare required inputs and returned data with the operation.
 3. Combine read-only MCP calls when that fully answers the request.
 4. Do not substitute a similarly named tool whose description targets another controller or object type.
+
+## Read Build History Past the Newest 100
+
+The job API's `builds` field holds at most the newest 100 builds. A range past
+that, such as `builds[number,timestamp]{100,125}`, returns an empty list rather
+than an error, so an empty page is not proof that the history has ended. When
+the oldest build returned so far started at or after the beginning of the
+period you need, request `allBuilds` with the same field list and the next
+range, for example `allBuilds[number,timestamp,result]{100,125}`. Then select
+builds by both ends of the period.
+
+- Always give `allBuilds` a range. Without one it returns the job's whole
+  history.
+- New builds shift the offsets while you page, so deduplicate by build number.
 
 ## Fall Back Per Operation
 

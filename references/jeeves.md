@@ -165,6 +165,26 @@ jeeves --format json node list --stats \
   | jq '.[] | {name, disk, temp, swap, response_ms, clock_ms, architecture}'
 ```
 
+## Read Build History Past the Newest 100
+
+`build list` reads the job API's `builds` field, which Jenkins limits to the
+newest 100 builds. In v1.12.0 a larger `--limit` returns 100 builds without a
+warning. Check the count: when exactly 100 come back and the oldest started at
+or after the beginning of the period you need, the list is truncated.
+
+Paged history past the newest 100 is a Jeeves capability gap, so apply the
+fallback chain to it:
+
+1. Use the MCP server's `allBuilds` range when MCP is available (see the MCP
+   capability guide).
+2. Otherwise use the Tier 3 `allBuilds` recipe in the HTTP API reference when
+   its URL and credentials are configured.
+3. Otherwise read older builds one at a time with `build show JOB NUMBER`,
+   working down from the oldest number returned, in parallel batches. Skip
+   numbers that return not found, because discarded builds leave gaps. Stop at
+   build 1 or once a whole batch of found builds started before the period,
+   and report the oldest build number checked.
+
 ## Handle Triggers Carefully
 
 Without `--wait`, `job trigger` confirms dispatch but does not return a queue URL or build number in v1.8.1. Inspect `queue`, then `build summary` or `build list`, while accounting for concurrent builds.
